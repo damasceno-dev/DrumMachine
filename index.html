@@ -14,20 +14,32 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script type="text/babel">
         const app = document.getElementById('root');
-        
+
+
         function App() {
             return (
                 <React.Fragment>
-                    <h1 className='text-4xl font-bold'>oi pessoal!</h1>
-                    <DrumButton name={'Q'} url={'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3'}/>
+                    <div id="container">
+                        <DrumButton name='Q' url='https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3'/>
+                    </div>
                 </React.Fragment>
             )
         }
 
         function DrumButton(props) {
+            document.addEventListener('keydown', handleKeyPress)
+
+            function handleKeyPress(event) {
+                console.log(props.name.toLowerCase())
+                if (event.key.toLowerCase() == props.name.toLowerCase()) {
+                    new Audio(props.url).play()
+                }
+            }
+
             function playMP3() {
                 new Audio(props.url).play()
             }
+
             return (
                 <button onClick={playMP3}
                         className='h-12 w-12 bg-gray-200'
