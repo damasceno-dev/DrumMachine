@@ -13,12 +13,9 @@ Freaky guitar: https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMP
 
 > functional toggle button
 > functional power button
- => identify colors on togglebutton (ballChecked, ballUnchecked, bgChecked, bgUnchecked)
- => make one button
+ ok=> identify colors on togglebutton (ballChecked, ballUnchecked, bgChecked, bgUnchecked)
+ ok=> make one button
+ => fill soundsArray.
  => checking input sets state, drumbutton reads this states and decides which bank will play, if power is on
 
-         <input
-            type="checkbox"
-            onChange={this.handleChange}
-          />
 > test verification

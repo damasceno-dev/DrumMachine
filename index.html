@@ -19,7 +19,8 @@
         function App() {
 
             const [power, setPower] = React.useState(true)
-            const [bank, setBank] = React.useState(true)
+            const [bank, setBank] = React.useState('drum')
+
 
             return (
                 <React.Fragment>
@@ -27,9 +28,8 @@
                         <DrumButton name='Q' url='https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3'/>
                         <DrumButton name='W' url='https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/58[kb]bellguitar1.wav.mp3'/>
                         <DrumButton name='E' url='https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/138[kb]freaky-guitar-burstbend.wav.mp3'/>                     
-                        <ToggleButton label='Power' bgUnchecked='bg-gray-700' ballUnchecked='bg-white' bgChecked='bg-green-500' ballChecked='bg-indigo-700'/>
-                        <ToggleButton label='Bank' bgUnchecked='bg-red-300' ballUnchecked='bg-blue-500' bgChecked='bg-red-300' ballChecked='bg-indigo-600'/>
-
+                        <ToggleButton label='Power' bgUnchecked='bg-gray-700' ballUnchecked='bg-white' bgChecked='bg-green-500' ballChecked='bg-indigo-700' onChecked={() => {setPower(!power)}} checked={power}/>
+                        <ToggleButton label='Bank' bgUnchecked='bg-red-300' ballUnchecked='bg-blue-500' bgChecked='bg-red-300' ballChecked='bg-red-600' onChecked={() => {bank === 'drum' ? setBank('guitar') : setBank('drum')}}/>
                     </div>
 
                 </React.Fragment>
@@ -37,10 +37,20 @@
         }
 
         function DrumButton(props) {
+            const soundsArray = [
+                {key:'q', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
+                {key:'w', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
+                {key:'e', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
+                {key:'a', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
+                {key:'s', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
+                {key:'d', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
+                {key:'z', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
+                {key:'x', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
+                {key:'c', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
+            ]
             document.addEventListener('keydown', handleKeyPress)
 
             function handleKeyPress(event) {
-                console.log(props.name.toLowerCase())
                 if (event.key.toLowerCase() == props.name.toLowerCase()) {
                     new Audio(props.url).play()
                 }
@@ -57,23 +67,13 @@
             )
         }
         
-        function BankButton() {
-            return (
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" value="" class="sr-only peer" />
-                    <div class="w-11 h-6 rounded-full peer dark: peer-checked:yellow-500 peer-checked:after:translate-x-full peer-checked:after: after:content-[''] after:absolute after:top-[2px] after:left-[2px] after: after:rounded-full after:h-5 after:w-5 after:transition-all "></div>
-                    <span class="ml-3 text-sm font-medium dark:text-gray-300">Bank</span>
-                </label>
-            )
-        }
-        
-        function ToggleButton({bgUnchecked, bgChecked, ballChecked, ballUnchecked, label}) {
+        function ToggleButton({bgUnchecked, bgChecked, ballChecked, ballUnchecked, label, onChecked, checked}) {
             let toggleStyle = `w-11 h-6 bg-gray-200 rounded-full peer dark:${bgUnchecked} peer-checked:after:translate-x-full peer-checked:after:${ballChecked} after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:${ballUnchecked} after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:${bgChecked}`
             return (
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" value="" class="sr-only peer" />
+                <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" value="" className="sr-only peer" onChange={onChecked} checked={checked}/>
                     <div className={toggleStyle}></div>
-                    <span class="ml-3 text-sm font-medium dark:text-gray-300">{label}</span>
+                    <span className="ml-3 text-sm font-medium dark:text-gray-300">{label}</span>
                 </label>
             )
         }
