@@ -27,8 +27,8 @@
                         <DrumButton name='Q' url='https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3'/>
                         <DrumButton name='W' url='https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/58[kb]bellguitar1.wav.mp3'/>
                         <DrumButton name='E' url='https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/138[kb]freaky-guitar-burstbend.wav.mp3'/>                     
-                        <PowerButton/>
-                        <BankButton/>
+                        <ToggleButton label='Power' bgUnchecked='bg-gray-700' ballUnchecked='bg-white' bgChecked='bg-green-500' ballChecked='bg-indigo-700'/>
+                        <ToggleButton label='Bank' bgUnchecked='bg-red-300' ballUnchecked='bg-blue-500' bgChecked='bg-red-300' ballChecked='bg-indigo-600'/>
 
                     </div>
 
@@ -61,18 +61,19 @@
             return (
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" value="" class="sr-only peer" />
-                    <div class="w-11 h-6 rounded-full peer dark:bg-red-300 peer-checked:yellow-500 peer-checked:after:translate-x-full peer-checked:after:bg-indigo-700 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-blue-800 after:rounded-full after:h-5 after:w-5 after:transition-all "></div>
+                    <div class="w-11 h-6 rounded-full peer dark: peer-checked:yellow-500 peer-checked:after:translate-x-full peer-checked:after: after:content-[''] after:absolute after:top-[2px] after:left-[2px] after: after:rounded-full after:h-5 after:w-5 after:transition-all "></div>
                     <span class="ml-3 text-sm font-medium dark:text-gray-300">Bank</span>
                 </label>
             )
         }
         
-        function PowerButton() {
+        function ToggleButton({bgUnchecked, bgChecked, ballChecked, ballUnchecked, label}) {
+            let toggleStyle = `w-11 h-6 bg-gray-200 rounded-full peer dark:${bgUnchecked} peer-checked:after:translate-x-full peer-checked:after:${ballChecked} after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:${ballUnchecked} after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:${bgChecked}`
             return (
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" value="" class="sr-only peer" />
-                    <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:bg-green-500 peer-checked:after:border peer-checked:after:border-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-700"></div>
-                    <span class="ml-3 text-sm font-medium dark:text-gray-300">Power</span>
+                    <div className={toggleStyle}></div>
+                    <span class="ml-3 text-sm font-medium dark:text-gray-300">{label}</span>
                 </label>
             )
         }
