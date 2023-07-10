@@ -14,20 +14,47 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script type="text/babel">
         const app = document.getElementById('root');
-
+        
+        const soundsArray = [
+                {key:'q', firstName: 'Heater 1', firstBankUrl:'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3', secondName: 'Wah flange', secondBankUrl:'https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/41[kb]wah-flange.wav.mp3'},
+                {key:'w', firstName: 'Heater 2', firstBankUrl:'https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3', secondName: 'Wah hit', secondBankUrl:'https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/20[kb]wah-hit.wav.mp3'},
+                {key:'e', firstName: 'Heater 3', firstBankUrl:'https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3', secondName: 'Bendy thick', secondBankUrl:'https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/106[kb]bendy-thick-guitarchord.wav.mp3'},
+                {key:'a', firstName: 'Heater 4', firstBankUrl:'https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3', secondName: 'Bendy note', secondBankUrl:'https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/96[kb]bendynote.wav.mp3'},
+                {key:'s', firstName: 'Clap', firstBankUrl:'https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3', secondName: 'Chord down', secondBankUrl:'https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/103[kb]chorddown-guitar.wav.mp3'},
+                {key:'d', firstName: 'Open-HH', firstBankUrl:'https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3', secondName: 'Chunky bunch', secondBankUrl:'https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/75[kb]chunkybunch_guitar1.wav.mp3'},
+                {key:'z', firstName: 'Kick-n\'-Hat', firstBankUrl:'https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3', secondName: 'Country chords', secondBankUrl:'https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/20[kb]countrychord.wav.mp3'},
+                {key:'x', firstName: 'Kick', firstBankUrl:'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3', secondName: 'Reverb hit', secondBankUrl:'https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/36[kb]dirty-high-reverb-hit.wav.mp3'},
+                {key:'c', firstName: 'Closed-HH', firstBankUrl:'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3', secondName: 'Freaky guitar', secondBankUrl:'https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/138[kb]freaky-guitar-burstbend.wav.mp3'},
+            ]
 
         function App() {
-
             const [power, setPower] = React.useState(true)
             const [bank, setBank] = React.useState('drum')
 
+            React.useEffect(() => {
+                document.addEventListener('keydown', handleKeyPress)
+                return () => document.removeEventListener('keydown', handleKeyPress)
+            },[bank,power])
+            
+            function playMP3(bank, power, soundToPlay) {
+                if (bank === 'drum' && power) {
+                    new Audio(soundToPlay.firstBankUrl).play()
+                } else if (bank === 'guitar'&& power) {
+                    new Audio(soundToPlay.secondBankUrl).play()
+                }
+            }
+
+            function handleKeyPress(event) {
+                let soundToPlay = soundsArray.find(x=> x.key === event.key.toLowerCase())
+                    playMP3(bank,power,soundToPlay)
+            }
 
             return (
                 <React.Fragment>
                     <div id="container">
-                        <DrumButton name='Q' url='https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3'/>
-                        <DrumButton name='W' url='https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/58[kb]bellguitar1.wav.mp3'/>
-                        <DrumButton name='E' url='https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/138[kb]freaky-guitar-burstbend.wav.mp3'/>                     
+                        <DrumButton name='Q' bank={bank} power={power} playMP3={playMP3}/>
+                        <DrumButton name='W' bank={bank} power={power} playMP3={playMP3}/>
+                        <DrumButton name='E' bank={bank} power={power} playMP3={playMP3}/>
                         <ToggleButton label='Power' bgUnchecked='bg-gray-700' ballUnchecked='bg-white' bgChecked='bg-green-500' ballChecked='bg-indigo-700' onChecked={() => {setPower(!power)}} checked={power}/>
                         <ToggleButton label='Bank' bgUnchecked='bg-red-300' ballUnchecked='bg-blue-500' bgChecked='bg-red-300' ballChecked='bg-red-600' onChecked={() => {bank === 'drum' ? setBank('guitar') : setBank('drum')}}/>
                     </div>
@@ -37,31 +64,12 @@
         }
 
         function DrumButton(props) {
-            const soundsArray = [
-                {key:'q', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
-                {key:'w', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
-                {key:'e', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
-                {key:'a', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
-                {key:'s', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
-                {key:'d', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
-                {key:'z', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
-                {key:'x', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
-                {key:'c', firstName: '', firstBankUrl:'', secondName: '', secondBankUrl:''},
-            ]
-            document.addEventListener('keydown', handleKeyPress)
-
-            function handleKeyPress(event) {
-                if (event.key.toLowerCase() == props.name.toLowerCase()) {
-                    new Audio(props.url).play()
-                }
-            }
-
-            function playMP3() {
-                new Audio(props.url).play()
-            }
+            let bank = props.bank
+            let power= props.power
+            let soundToPlay = soundsArray.find(x=> x.key === props.name.toLowerCase())
 
             return (
-                <button onClick={playMP3}
+                <button onClick={() => props.playMP3(bank, power, soundToPlay)}
                         className='h-12 w-12 bg-gray-200'
                 >{props.name}</button>
             )

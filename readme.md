@@ -11,11 +11,11 @@ Country chords: https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAM
 Reverb hit: https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/36[kb]dirty-high-reverb-hit.wav.mp3
 Freaky guitar: https://sampleswap.org/samples-ghost/INSTRUMENTS%20(SINGLE%20SAMPLES)/Guitars/138[kb]freaky-guitar-burstbend.wav.mp3
 
-> functional toggle button
-> functional power button
+> (ok) functional toggle button
+> (ok) functional power button
  ok=> identify colors on togglebutton (ballChecked, ballUnchecked, bgChecked, bgUnchecked)
  ok=> make one button
- => fill soundsArray.
- => checking input sets state, drumbutton reads this states and decides which bank will play, if power is on
+ ok=> fill soundsArray.
+ ok=> checking input sets state, drumbutton reads this states and decides which bank will play, if power is on
 
 > test verification
