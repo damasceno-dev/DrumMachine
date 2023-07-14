@@ -10,7 +10,11 @@
 
 > (ok) test verification
 > (ok) volume slider
-> check button/click bug
+> (ok) check button/click bug
+> (ok) bug of click slow => how fcc code pen solves it?
+> (ok) style button
+> animate button when key is pressed
 > define layout and div where the information goes
-> style button
 > functional information div (dev em dobro)
+
+

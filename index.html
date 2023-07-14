@@ -31,43 +31,51 @@
             const [power, setPower] = React.useState(true)
             const [bank, setBank] = React.useState('drum')
             const [volume, setVolume] = React.useState(0.5)
+            
             React.useEffect(() => {
                 document.addEventListener('keydown', handleKeyPress)
                 return () => document.removeEventListener('keydown', handleKeyPress)
             },[bank,power,volume])
             
-            function playMP3(bank, power, soundToPlay) {
+            function playMP3() {
                 var audio = event.target.querySelector('audio')
+                console.log(audio)
+                audio.currentTime = 0 //to attend fast mouse clicks
                 audio.volume = volume;
-                if (power) {
+                if ( power) {
                     audio.play()
                 }
-                // if (bank === 'drum' && power) {
-                //     new Audio(soundToPlay.firstBankUrl).play()
-                // } else if (bank === 'guitar'&& power) {
-                //     new Audio(soundToPlay.secondBankUrl).play()
-                // }
+
             }
 
             function handleKeyPress(event) {
                 let soundToPlay = soundsArray.find(x=> x.key === event.key.toLowerCase())
+                var audio = new Audio(soundToPlay.firstBankUrl);
                 
-                playMP3(bank,power,soundToPlay)
+                if (bank === 'guitar') {
+                    audio = new Audio(soundToPlay.secondBankUrl);
+                }
+                var x = document.getElementById(event.key.toUpperCase()).parentElement.parentElement
+  
+                if (power) {
+                    // audio.play()
+                    x.click()
+                } 
             }
 
             return (
                 <React.Fragment>
                     <div id='drum-machine' className='flex gap-4'>
-                        <div id="buttons" className='grid grid-cols-3'>
-                            <DrumButton name='Q' bank={bank} power={power} playMP3={playMP3}/>
-                            <DrumButton name='W' bank={bank} power={power} playMP3={playMP3}/>
-                            <DrumButton name='E' bank={bank} power={power} playMP3={playMP3}/>
-                            <DrumButton name='A' bank={bank} power={power} playMP3={playMP3}/>
-                            <DrumButton name='S' bank={bank} power={power} playMP3={playMP3}/>
-                            <DrumButton name='D' bank={bank} power={power} playMP3={playMP3}/>
-                            <DrumButton name='Z' bank={bank} power={power} playMP3={playMP3}/>
-                            <DrumButton name='X' bank={bank} power={power} playMP3={playMP3}/>
-                            <DrumButton name='C' bank={bank} power={power} playMP3={playMP3}/>
+                        <div id="buttons" className='grid grid-cols-3 gap-3'>
+                            <DrumButton name='Q' bank={bank} playMP3={playMP3}/>
+                            <DrumButton name='W' bank={bank} playMP3={playMP3}/>
+                            <DrumButton name='E' bank={bank} playMP3={playMP3}/>
+                            <DrumButton name='A' bank={bank} playMP3={playMP3}/>
+                            <DrumButton name='S' bank={bank} playMP3={playMP3}/>
+                            <DrumButton name='D' bank={bank} playMP3={playMP3}/>
+                            <DrumButton name='Z' bank={bank} playMP3={playMP3}/>
+                            <DrumButton name='X' bank={bank} playMP3={playMP3}/>
+                            <DrumButton name='C' bank={bank} playMP3={playMP3}/>
                         </div>
                         <div id="controls" className='flex flex-col h-full'>
                             <ToggleButton label='Bank' bgUnchecked='bg-red-300' ballUnchecked='bg-blue-500' bgChecked='bg-red-300' ballChecked='bg-red-600' onChecked={() => {bank === 'drum' ? setBank('guitar') : setBank('drum')}}/>
@@ -84,18 +92,21 @@
         }
 
         function DrumButton(props) {
+            let keyTrigger = props.name;
             let bank = props.bank;
-            let power= props.power;
-            let soundToPlay = soundsArray.find(x=> x.key === props.name.toLowerCase());
+            let soundToPlay = soundsArray.find(x=> x.key === keyTrigger.toLowerCase());
             let audioSource = bank === 'drum' ? soundToPlay.firstBankUrl : soundToPlay.secondBankUrl;
 
             return (
-                <button onClick={() => props.playMP3(bank, power, soundToPlay)}
-                        className='drum-pad h-12 w-12 bg-gray-200'
+                <button onClick={() => props.playMP3()}
+                        className='drum-pad focus:outline-none w-16 h-16 bg-indigo-600 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
+    active:border-b-[0px] transition-all duration-50 [box-shadow:0_6px_0_0_#22c55e,0_15px_0_0_#1b70f841] border-b-[1px] border-indigo-300'
                         id='drum-pad'
                 >
-                    <audio src={audioSource} className='clip' id={props.name}/>
-                {props.name}
+                    <span className='flex flex-col justify-center items-center h-full text-white font-bold text-lg '>
+                        <audio src={audioSource} className='clip' id={props.name}/>
+                        {props.name}
+                    </span>
                 </button>
             )
         }
@@ -116,10 +127,10 @@
                 <React.Fragment>
                     <label htmlFor="volume" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">volume</label>
                     <input  min={0}
-          max={1}
-          step={0.01}
-          value={volumeValue}
-          onChange={changeVolume} id="small-range" type="range"  className="w-full h-1 mb-6 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700" />
+                            max={1}
+                            step={0.01}
+                            value={volumeValue}
+                            onChange={changeVolume} id="small-range" type="range"  className="w-full h-1 mb-6 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700" />
                 </React.Fragment>
             )
         }
