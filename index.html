@@ -6,10 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drum Machine</title>
     <style>
-        .aniamete-key {
+        .animate-key {
             transform: translateY(0.5rem);
             box-shadow: 0 0px 0 0 rgba(27, 111, 248, 1), 0 0px 0 0 rgba(27, 112, 248, 0.25) !important;
             border-bottom: 0px;
+        }
+
+        .display-style {
+            --edge-size: 0.9em;
+
+            display: inline-grid;
+            place-content: center;
+            clip-path: polygon(
+                var(--edge-size) 0%,
+                100% 0,
+                100% calc(100% - var(--edge-size)),
+                calc(100% - var(--edge-size)) 100%,
+                0 100%,
+                0% var(--edge-size)
+            );
         }
     </style>
 
@@ -44,8 +59,8 @@
             },[bank,power,volume])
             
             function playMP3() {
-                var audio = event.target.querySelector('audio')
-                audio.currentTime = 0 //to attend fast mouse clicks
+                const audio = event.target.querySelector('audio')
+                audio.currentTime = 0 //for quick mouse clicks
                 audio.volume = volume;
                 if ( power) {
                     audio.play()
@@ -54,28 +69,30 @@
             }
 
             function handleKeyPress(event) {
-                let soundToPlay = soundsArray.find(x=> x.key === event.key.toLowerCase())
-                var audio = new Audio(soundToPlay.firstBankUrl);
-                
-                if (bank === 'guitar') {
-                    audio = new Audio(soundToPlay.secondBankUrl);
-                }
+                const audio = document.getElementById(event.key.toUpperCase());
+                audio.currentTime = 0 //for quick keyboard button press
                 audio.volume = volume;
-                var buttonPressed = document.getElementById(event.key.toUpperCase()).parentElement.parentElement;
+
+                const buttonPressed = audio.parentElement.parentElement;
+                
+                 buttonPressed.classList.add('animate-key') //animation for key press (you cant set activate pseudo class with js)
+                 setTimeout(() => {
+                     buttonPressed.classList.remove('animate-key')
+                 }, 100)
 
                 if (power) {
                     audio.play()
-
-                    //animation for key press
-                    buttonPressed.classList.add('aniamete-key')
-                    setTimeout(() => {
-                        buttonPressed.classList.remove('aniamete-key')
-                    }, 100)
                 } 
             }
 
             return (
                 <React.Fragment>
+                    <div id="dis-container" className='h-12 w-full mb-4 flex justify-center items-center'>
+                        <div id="display" className='display-style h-full w-60 bg-green-300'>
+                            <span className="text-lg font-medium dark:text-gray-700">epa lele</span>   
+                        </div>
+                    </div>
+                    
                     <div id='drum-machine' className='flex gap-4'>
                         <div id="buttons" className='grid grid-cols-3 gap-3'>
                             <DrumButton name='Q' bank={bank} playMP3={playMP3}/>
@@ -88,13 +105,13 @@
                             <DrumButton name='X' bank={bank} playMP3={playMP3}/>
                             <DrumButton name='C' bank={bank} playMP3={playMP3}/>
                         </div>
-                        <div id="controls" className='flex flex-col h-full'>
-                            <ToggleButton label='Bank' bgUnchecked='bg-red-300' ballUnchecked='bg-blue-500' bgChecked='bg-red-300' ballChecked='bg-red-600' onChecked={() => {bank === 'drum' ? setBank('guitar') : setBank('drum')}}/>
+                        <div id="controls" className='flex flex-col items-center justify-around gap-6 py-5'>
+                            <ToggleButton label='Power' bgUnchecked='bg-gray-700' ballUnchecked='bg-white' bgChecked='bg-green-500' ballChecked='bg-indigo-700' onChecked={() => {setPower(!power)}} checked={power}/>
                             <VolumeSlider 
                                 changeVolume={event => {setVolume(event.target.valueAsNumber); console.log(volume)}}
                                 volumeValue={volume}
                             />
-                            <ToggleButton label='Power' bgUnchecked='bg-gray-700' ballUnchecked='bg-white' bgChecked='bg-green-500' ballChecked='bg-indigo-700' onChecked={() => {setPower(!power)}} checked={power}/>
+                            <ToggleButton label='Bank' bgUnchecked='bg-red-100' ballUnchecked='bg-blue-500' bgChecked='bg-red-100' ballChecked='bg-red-700' onChecked={() => {bank === 'drum' ? setBank('guitar') : setBank('drum')}}/>
                         </div>
                     </div>
                                 
@@ -135,14 +152,14 @@
 
         function VolumeSlider({changeVolume, volumeValue}) {
             return (
-                <React.Fragment>
-                    <label htmlFor="volume" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">volume</label>
+                <div>
+                    <label htmlFor="volume" className="block mb-[-10px] text-sm font-medium text-gray-900 dark:text-white">volume</label>
                     <input  min={0}
                             max={1}
                             step={0.01}
                             value={volumeValue}
-                            onChange={changeVolume} id="small-range" type="range"  className="w-full h-1 mb-6 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700" />
-                </React.Fragment>
+                            onChange={changeVolume} id="small-range" type="range"  className="w-full h-1 mb-1 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700" />
+                </div>
             )
         }
         

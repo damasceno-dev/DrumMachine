@@ -14,6 +14,8 @@
 > (ok) bug of click slow => how fcc code pen solves it?
 > (ok) style button
 > (ok) animate button when key is pressed
+
+> test verification
 > define layout and div where the information goes
 > functional information div (dev em dobro)
 
