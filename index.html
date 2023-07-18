@@ -141,7 +141,7 @@
                         <div id="controls" className='flex flex-col items-center justify-around gap-6 py-5'>
                             <ToggleButton label='Power' bgUnchecked='bg-gray-700' ballUnchecked='bg-white' bgChecked='bg-green-500' ballChecked='bg-indigo-700' onChecked={handlePower} checked={power}/>
                             <VolumeSlider 
-                                changeVolume={event => {setVolume(event.target.valueAsNumber); setDisplayText('Volume: ' + parseInt(event.target.valueAsNumber*100)); console.log(volume)}}
+                                changeVolume={event => {setVolume(event.target.valueAsNumber); setDisplayText( power && 'Volume: ' + parseInt(event.target.valueAsNumber*100)); console.log(volume)}}
                                 volumeValue={volume}
                             />
                             <ToggleButton label='Bank' bgUnchecked='bg-red-100' ballUnchecked='bg-blue-500' bgChecked='bg-red-100' ballChecked='bg-red-700' onChecked={handleChangeBank}/>
