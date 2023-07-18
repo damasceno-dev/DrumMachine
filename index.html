@@ -52,23 +52,54 @@
             const [power, setPower] = React.useState(true)
             const [bank, setBank] = React.useState('drum')
             const [volume, setVolume] = React.useState(0.5)
+            const [displayText, setDisplayText] = React.useState('');
             
             React.useEffect(() => {
                 document.addEventListener('keydown', handleKeyPress)
                 return () => document.removeEventListener('keydown', handleKeyPress)
             },[bank,power,volume])
-            
-            function playMP3() {
+
+            function handleChangeBank() {
+                if (bank === 'drum') {
+                    setBank('guitar');
+                    power && setDisplayText('Guitar kit')
+                } else if (bank === 'guitar') {
+                    setBank('drum');
+                     power && setDisplayText('Drum kit')
+                }
+            }
+
+            function handlePower() {
+                if (power) {
+                    setDisplayText('Power off')
+                } else {
+                    setDisplayText('Power on')
+                }
+                setPower(!power)
+                
+            }
+
+            function playMP3(textToDisplay) {
                 const audio = event.target.querySelector('audio')
                 audio.currentTime = 0 //for quick mouse clicks
                 audio.volume = volume;
                 if ( power) {
+                    setDisplayText(textToDisplay)
                     audio.play()
                 }
-
             }
 
             function handleKeyPress(event) {
+                
+                let soundToPlay = soundsArray.find(x=> x.key === event.key.toLowerCase())
+                let textToDisplay;
+
+                if (bank === 'drum') {
+                    textToDisplay = soundToPlay.firstName;
+                } else if (bank === 'guitar') {
+                    textToDisplay = soundToPlay.secondName;
+                }
+
                 const audio = document.getElementById(event.key.toUpperCase());
                 audio.currentTime = 0 //for quick keyboard button press
                 audio.volume = volume;
@@ -81,15 +112,17 @@
                  }, 100)
 
                 if (power) {
+                    setDisplayText(textToDisplay)
                     audio.play()
                 } 
             }
 
             return (
                 <React.Fragment>
-                    <div id="dis-container" className='h-12 w-full mb-4 flex justify-center items-center'>
+                    <div id="full_container" className=' rounded bg-indigo-900 p-10 border-[1px] border-white'>
+                        <div id="dis-container" className='h-12 w-full mb-4 flex justify-center items-center'>
                         <div id="display" className='display-style h-full w-60 bg-green-300'>
-                            <span className="text-lg font-medium dark:text-gray-700">epa lele</span>   
+                            <span className="text-lg font-medium dark:text-gray-700">{displayText}</span>   
                         </div>
                     </div>
                     
@@ -106,15 +139,15 @@
                             <DrumButton name='C' bank={bank} playMP3={playMP3}/>
                         </div>
                         <div id="controls" className='flex flex-col items-center justify-around gap-6 py-5'>
-                            <ToggleButton label='Power' bgUnchecked='bg-gray-700' ballUnchecked='bg-white' bgChecked='bg-green-500' ballChecked='bg-indigo-700' onChecked={() => {setPower(!power)}} checked={power}/>
+                            <ToggleButton label='Power' bgUnchecked='bg-gray-700' ballUnchecked='bg-white' bgChecked='bg-green-500' ballChecked='bg-indigo-700' onChecked={handlePower} checked={power}/>
                             <VolumeSlider 
-                                changeVolume={event => {setVolume(event.target.valueAsNumber); console.log(volume)}}
+                                changeVolume={event => {setVolume(event.target.valueAsNumber); setDisplayText('Volume: ' + parseInt(event.target.valueAsNumber*100)); console.log(volume)}}
                                 volumeValue={volume}
                             />
-                            <ToggleButton label='Bank' bgUnchecked='bg-red-100' ballUnchecked='bg-blue-500' bgChecked='bg-red-100' ballChecked='bg-red-700' onChecked={() => {bank === 'drum' ? setBank('guitar') : setBank('drum')}}/>
+                            <ToggleButton label='Bank' bgUnchecked='bg-red-100' ballUnchecked='bg-blue-500' bgChecked='bg-red-100' ballChecked='bg-red-700' onChecked={handleChangeBank}/>
                         </div>
                     </div>
-                                
+                    </div>
                 </React.Fragment>
             )
         }
@@ -123,10 +156,18 @@
             let keyTrigger = props.name;
             let bank = props.bank;
             let soundToPlay = soundsArray.find(x=> x.key === keyTrigger.toLowerCase());
-            let audioSource = bank === 'drum' ? soundToPlay.firstBankUrl : soundToPlay.secondBankUrl;
+            let textToDisplay; let audioSource;
+
+            if (bank === 'drum') {
+                    textToDisplay = soundToPlay.firstName;
+                    audioSource = soundToPlay.firstBankUrl;
+                } else if (bank === 'guitar') {
+                    textToDisplay = soundToPlay.secondName;
+                    audioSource = soundToPlay.secondBankUrl;
+                }
 
             return (
-                <button onClick={() => props.playMP3()}
+                <button onClick={() => props.playMP3(textToDisplay)}
                         className='drum-pad focus:outline-none w-16 h-16 bg-indigo-600 rounded-lg cursor-pointer select-none active:translate-y-2 active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
     active:border-b-[0px] transition-all duration-50 [box-shadow:0_6px_0_0_#22c55e,0_15px_0_0_#1b70f841] border-b-[1px] border-indigo-300'
                         id='drum-pad'
